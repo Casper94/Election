@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cbebeaee-717f-42b7-8fbd-61d6d7128dcb" name="Changes" comment="" />
+    <list default="true" id="cbebeaee-717f-42b7-8fbd-61d6d7128dcb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/AVotingSystem.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AVotingSystem.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/election/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/election/settings.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,6 +31,11 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\My Files\Django_projects\AnElectionSystem\election" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="AVotingSystem" />
@@ -59,7 +69,8 @@
       <option name="presentableId" value="Default" />
       <updated>1703851761697</updated>
       <workItem from="1703851763182" duration="14000" />
-      <workItem from="1703851800965" duration="1150000" />
+      <workItem from="1703851800965" duration="1435000" />
+      <workItem from="1703908057834" duration="1131000" />
     </task>
     <servers />
   </component>
