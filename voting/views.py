@@ -7,7 +7,7 @@ from .models import Votes
 # from .utils import bypass_otp
 
 # Create your views here.
-class DashboardView(View):
+class VoterDashboardView(View):
     template_name = "voting/voter/result.html"
 
     # def get(self, request, *args, **kwargs):

@@ -8,7 +8,6 @@ from .forms import CustomUserForm
 from voting.forms import VoterForm
 
 
-
 # Create your views here.
 class AccountLoginView(View):
     template_name = "voting/login.html"
@@ -24,7 +23,7 @@ class AccountLoginView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        user = self.authenticate_user(request.POST.get('email'), request.POST.get('password'))
+        user = self.authenticate_user(request, request.POST.get('email'), request.POST.get('password'))
 
         if user is not None:
             login(request, user)
@@ -36,8 +35,8 @@ class AccountLoginView(View):
             messages.error(request, "Invalid details")
             return redirect("/")
 
-    def authenticate_user(self, username, password):
-        return ModelBackend().authenticate(username=username, password=password)
+    def authenticate_user(self, request, username, password):
+        return ModelBackend().authenticate( request=request, username=username, password=password)
 
 
 class AccountRegisterView(View):
@@ -66,3 +65,15 @@ class AccountRegisterView(View):
             messages.error(request, "Provided data failed validation")
 
         return render(request, self.template_name, context)
+
+
+class AccountLogoutView(View):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated:
+            logout(request)
+            messages.success(request, "Thank you for visiting us!")
+        else:
+            messages.error(request, "You need to be logged in to perform this action")
+
+        return redirect(reverse("account_login"))

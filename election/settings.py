@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     #My apps
     'account.apps.AccountConfig',
     'voting.apps.VotingConfig',
+    'administrator.apps.AdministratorConfig',
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'account.middleware.AccountCheckMiddleWare',
+
 ]
 
 ROOT_URLCONF = 'election.urls'
