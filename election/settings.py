@@ -155,3 +155,6 @@ AUTHENTICATION_BACKENDS = ['account.email_backend.EmailBackend']
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+SEND_OTP = False  # If you toggle this to False, Kindly use 0000 as your OTP
