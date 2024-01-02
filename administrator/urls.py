@@ -7,6 +7,9 @@ urlpatterns = [
 
     # * Voters
     path('voters/', VotersView.as_view(), name='adminViewVoters'),
+    path('voters/view', ViewVoterByIdView.as_view(), name="viewVoter"),
+    path('voters/delete', DeleteVoterView.as_view(), name='deleteVoter'),
+    path('voters/update', UpdateVoterView.as_view(), name="updateVoter"),
 
     # * Position
     path('positions/view', ViewPositionsView.as_view(), name='viewPositions'),
@@ -21,6 +24,6 @@ urlpatterns = [
 
     # * Votes
     path('votes/view', ViewVotesView.as_view(), name='viewVotes'),
-    #path('votes/reset/', views.resetVote, name='resetVote'),
+    path('votes/reset/', ResetVoteView.as_view(), name='resetVote'),
     #path('votes/print/', views.PrintView.as_view(), name='printResult'),
 ]

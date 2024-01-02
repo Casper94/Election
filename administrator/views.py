@@ -6,6 +6,7 @@ from django.contrib import messages
 # from voting.models import Position, Candidate, Voter, Votes
 from account.forms import CustomUserForm
 from voting.forms import *
+from django.urls import reverse
 from django.http import JsonResponse
 
 
@@ -203,3 +204,70 @@ class ViewPositionsView(View):
             messages.error(request, "Form errors")
 
         return render(request, self.template_name, context)
+
+
+class ViewVoterByIdView(View):
+    def get(self, request, *args, **kwargs):
+        voter_id = request.GET.get('id', None)
+        voter = Voter.objects.filter(id=voter_id)
+        context = {}
+
+        if not voter.exists():
+            context['code'] = 404
+        else:
+            context['code'] = 200
+            voter = voter[0]
+            context['first_name'] = voter.admin.first_name
+            context['last_name'] = voter.admin.last_name
+            context['phone'] = voter.phone
+            context['id'] = voter.id
+            context['email'] = voter.admin.email
+
+        return JsonResponse(context)
+
+
+class UpdateVoterView(View):
+    def post(self, request, *args, **kwargs):
+        if request.method != 'POST':
+            messages.error(request, 'Access Denied')
+            return redirect(reverse('adminViewVoters'))
+
+        try:
+            instance = Voter.objects.get(id=request.POST.get('id'))
+            user_form = CustomUserForm(request.POST or None, instance=instance.admin)
+            voter_form = VoterForm(request.POST or None, instance=instance)
+
+            if user_form.is_valid() and voter_form.is_valid():
+                user_form.save()
+                voter_form.save()
+                messages.success(request, 'Voter\'s bio updated')
+            else:
+                messages.error(request, "Form validation Failed.")
+        except Voter.DoesNotExist:
+            messages.error(request, "Access to this Resource Denied")
+        return redirect(reverse('adminViewVoters'))
+
+
+class DeleteVoterView(View):
+    def post(self, request, *args, **kwargs):
+        if request.method != 'POST':
+            messages.error(request, "Access Denied")
+            return redirect(reverse('adminViewVoters'))
+
+        try:
+            voter = Voter.objects.get(id=request.POST.get('id'))
+            admin = voter.admin
+            admin.delete()
+            messages.success(request, "Voter has been deleted")
+        except Voter.DoesNotExist:
+            messages.error(request, "Access to this resource denied")
+
+        return redirect(reverse('adminViewVoters'))
+
+
+class ResetVoteView(View):
+    def get(self, request, *args, **kwargs):
+        Votes.objects.all().delete()
+        Voter.objects.all().update(voted=False, verified=False, otp=None)
+        messages.success(request, "All votes have been reset")
+        return redirect(reverse('viewVotes'))
