@@ -10,79 +10,6 @@ from django.urls import reverse
 from django.http import JsonResponse
 
 
-class ViewCandidatesView(View):
-    template_name = "admin/candidates.html"
-
-    def get(self, request, *args, **kwargs):
-        candidates = Candidate.objects.all()
-        form = CandidateForm()
-        context = {
-            'candidates': candidates,
-            'form1': form,
-            'page_title': 'Candidates'
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        form = CandidateForm(request.POST, request.FILES)
-        candidates = Candidate.objects.all()
-        context = {
-            'candidates': candidates,
-            'form1': form,
-            'page_title': 'Candidates'
-        }
-
-        if form.is_valid():
-            new_candidate = form.save()
-            messages.success(request, "New Candidate Created")
-            return redirect('view_candidates')  # Redirect to the same view after successful form submission
-        else:
-            messages.error(request, "Form errors")
-
-        return render(request, self.template_name, context)
-
-
-class ViewCandidateByIdView(View):
-    def get(self, request, *args, **kwargs):
-        candidate_id = request.GET.get('id', None)
-        candidate = Candidate.objects.filter(id=candidate_id)
-        context = {}
-
-        if not candidate.exists():
-            context['code'] = 404
-        else:
-            candidate = candidate[0]
-            context['code'] = 200
-            context['fullname'] = candidate.fullname
-            previous = CandidateForm(instance=candidate)
-            context['form'] = str(previous.as_p())
-
-        return JsonResponse(context)
-
-
-class BallotPositionView(View):
-    template_name = "admin/ballot_position.html"
-
-    def get(self, request, *args, **kwargs):
-        context = {
-            'page_title': "Ballot Position"
-        }
-        return render(request, self.template_name, context)
-
-
-class BallotTitleView(View):
-    def post(self, request, *args, **kwargs):
-        try:
-            url = urlparse(request.META['HTTP_REFERER']).path
-            redirect_url = resolve(url)
-            title = request.POST.get('title', 'No Name')
-            with open(settings.ELECTION_TITLE_PATH, 'w') as file:
-                file.write(title)
-            messages.success(request, "Election title has been changed to " + str(title))
-            return redirect(url)
-        except Exception as e:
-            messages.error(request, str(e))
-            return redirect("/")
 
 
 class AdminDashboardView(View):
@@ -172,40 +99,6 @@ class ViewVotesView(View):
         return render(request, self.template_name, context)
 
 
-class ViewPositionsView(View):
-    template_name = "admin/positions.html"
-
-    def get(self, request, *args, **kwargs):
-        positions = Position.objects.order_by('-priority').all()
-        form = PositionForm()
-        context = {
-            'positions': positions,
-            'form1': form,
-            'page_title': "Positions"
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        form = PositionForm(request.POST)
-        positions = Position.objects.order_by('-priority').all()
-        context = {
-            'positions': positions,
-            'form1': form,
-            'page_title': "Positions"
-        }
-
-        if form.is_valid():
-            new_position = form.save(commit=False)
-            new_position.priority = positions.count() + 1  # Just in case it is empty.
-            new_position.save()
-            messages.success(request, "New Position Created")
-            return redirect('view_positions')  # Redirect to the same view after successful form submission
-        else:
-            messages.error(request, "Form errors")
-
-        return render(request, self.template_name, context)
-
-
 class ViewVoterByIdView(View):
     def get(self, request, *args, **kwargs):
         voter_id = request.GET.get('id', None)
@@ -263,6 +156,244 @@ class DeleteVoterView(View):
             messages.error(request, "Access to this resource denied")
 
         return redirect(reverse('adminViewVoters'))
+
+
+class ViewPositionByIdView(View):
+    def get(self, request, *args, **kwargs):
+        pos_id = request.GET.get('id', None)
+        position = Position.objects.filter(id=pos_id)
+        context = {}
+
+        if not position.exists():
+            context['code'] = 404
+        else:
+            context['code'] = 200
+            position = position.first()
+            context['name'] = position.name
+            context['max_vote'] = position.max_vote
+            context['id'] = position.id
+
+        return JsonResponse(context)
+
+
+class ViewPositionsView(View):
+    template_name = "admin/positions.html"
+
+    def get(self, request, *args, **kwargs):
+        positions = Position.objects.order_by('-priority').all()
+        form = PositionForm()
+        context = {
+            'positions': positions,
+            'form1': form,
+            'page_title': "Positions"
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = PositionForm(request.POST)
+        positions = Position.objects.order_by('-priority').all()
+        context = {
+            'positions': positions,
+            'form1': form,
+            'page_title': "Positions"
+        }
+
+        if form.is_valid():
+            new_position = form.save(commit=False)
+            new_position.priority = positions.count() + 1  # Just in case it is empty.
+            new_position.save()
+            messages.success(request, "New Position Created")
+            return redirect('view_positions')  # Redirect to the same view after successful form submission
+        else:
+            messages.error(request, "Form errors")
+
+        return render(request, self.template_name, context)
+
+
+class UpdatePositionView(View):
+    def post(self, request, *args, **kwargs):
+        if request.method != 'POST':
+            messages.error(request, "Access Denied")
+            return redirect(reverse('viewPositions'))
+
+        try:
+            instance = Position.objects.get(id=request.POST.get('id'))
+            position_form = PositionForm(request.POST or None, instance=instance)
+
+            if position_form.is_valid():
+                position_form.save()
+                messages.success(request, "Position has been updated")
+            else:
+                messages.error(request, "Form validation failed")
+
+        except Position.DoesNotExist:
+            messages.error(request, "Access to this resource denied")
+
+        return redirect(reverse('viewPositions'))
+
+
+class DeletePositionView(View):
+    def post(self, request, *args, **kwargs):
+        if request.method != 'POST':
+            messages.error(request, "Access Denied")
+            return redirect(reverse('viewPositions'))
+
+        try:
+            position = Position.objects.get(id=request.POST.get('id'))
+            position.delete()
+            messages.success(request, "Position has been deleted")
+        except Position.DoesNotExist:
+            messages.error(request, "Access to this resource denied")
+
+        return redirect(reverse('viewPositions'))
+
+
+class ViewCandidatesView(View):
+    template_name = "admin/candidates.html"
+
+    def get(self, request, *args, **kwargs):
+        candidates = Candidate.objects.all()
+        form = CandidateForm()
+        context = {
+            'candidates': candidates,
+            'form1': form,
+            'page_title': 'Candidates'
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = CandidateForm(request.POST, request.FILES)
+        candidates = Candidate.objects.all()
+        context = {
+            'candidates': candidates,
+            'form1': form,
+            'page_title': 'Candidates'
+        }
+
+        if form.is_valid():
+            new_candidate = form.save()
+            messages.success(request, "New Candidate Created")
+            return redirect('view_candidates')  # Redirect to the same view after successful form submission
+        else:
+            messages.error(request, "Form errors")
+
+        return render(request, self.template_name, context)
+
+
+class ViewCandidateByIdView(View):
+    def get(self, request, *args, **kwargs):
+        candidate_id = request.GET.get('id', None)
+        candidate = Candidate.objects.filter(id=candidate_id)
+        context = {}
+
+        if not candidate.exists():
+            context['code'] = 404
+        else:
+            candidate = candidate[0]
+            context['code'] = 200
+            context['fullname'] = candidate.fullname
+            previous = CandidateForm(instance=candidate)
+            context['form'] = str(previous.as_p())
+
+        return JsonResponse(context)
+
+
+class UpdateCandidateView(View):
+    def post(self, request, *args, **kwargs):
+        if request.method != 'POST':
+            messages.error(request, "Access Denied")
+            return redirect(reverse('viewCandidates'))
+
+        try:
+            candidate_id = request.POST.get('id')
+            candidate = Candidate.objects.get(id=candidate_id)
+            form = CandidateForm(request.POST or None, request.FILES or None, instance=candidate)
+
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Candidate Data Updated")
+            else:
+                messages.error(request, "Form has errors")
+
+        except Candidate.DoesNotExist:
+            messages.error(request, "Access To This Resource Denied")
+
+        return redirect(reverse('viewCandidates'))
+
+
+class DeleteCandidateView(View):
+    def post(self, request, *args, **kwargs):
+        if request.method != 'POST':
+            messages.error(request, "Access Denied")
+            return redirect(reverse('viewCandidates'))
+
+        try:
+            candidate = Candidate.objects.get(id=request.POST.get('id'))
+            candidate.delete()
+            messages.success(request, "Candidate has been deleted")
+        except Candidate.DoesNotExist:
+            messages.error(request, "Access to this resource denied")
+
+        return redirect(reverse('viewCandidates'))
+
+
+class BallotPositionView(View):
+    template_name = "admin/ballot_position.html"
+
+    def get(self, request, *args, **kwargs):
+        context = {
+            'page_title': "Ballot Position"
+        }
+        return render(request, self.template_name, context)
+
+
+class UpdateBallotPositionView(View):
+    def get(self, request, position_id, up_or_down, *args, **kwargs):
+        try:
+            context = {'error': False}
+            position = Position.objects.get(id=position_id)
+
+            if up_or_down == 'up':
+                priority = position.priority - 1
+                if priority == 0:
+                    context['error'] = True
+                    output = "This position is already at the top"
+                else:
+                    Position.objects.filter(priority=priority).update(priority=(priority + 1))
+                    position.priority = priority
+                    position.save()
+                    output = "Moved Up"
+            else:
+                priority = position.priority + 1
+                if priority > Position.objects.all().count():
+                    output = "This position is already at the bottom"
+                    context['error'] = True
+                else:
+                    Position.objects.filter(priority=priority).update(priority=(priority - 1))
+                    position.priority = priority
+                    position.save()
+                    output = "Moved Down"
+
+            context['message'] = output
+        except Exception as e:
+            context['message'] = str(e)
+
+        return JsonResponse(context)
+
+
+class BallotTitleView(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            url = urlparse(request.META['HTTP_REFERER']).path
+            redirect_url = resolve(url)
+            title = request.POST.get('title', 'No Name')
+            with open(settings.ELECTION_TITLE_PATH, 'w') as file:
+                file.write(title)
+            messages.success(request, "Election title has been changed to " + str(title))
+            return redirect(url)
+        except Exception as e:
+            messages.error(request, str(e))
+            return redirect("/")
 
 
 class ResetVoteView(View):

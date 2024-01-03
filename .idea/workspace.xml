@@ -94,7 +94,9 @@
       <workItem from="1703999116419" duration="5977000" />
       <workItem from="1704034780807" duration="2750000" />
       <workItem from="1704085165722" duration="1503000" />
-      <workItem from="1704184501180" duration="2512000" />
+      <workItem from="1704184501180" duration="2886000" />
+      <workItem from="1704201432650" duration="1760000" />
+      <workItem from="1704256776462" duration="1338000" />
     </task>
     <servers />
   </component>
@@ -117,13 +119,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/administrator/views.py</url>
-          <line>44</line>
-          <option name="timeStamp" value="1" />
+          <line>168</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/administrator/views.py</url>
-          <line>174</line>
-          <option name="timeStamp" value="2" />
+          <line>39</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
