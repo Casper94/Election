@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
@@ -8,9 +10,22 @@ from .models import *
 from django.http import JsonResponse
 from django.utils.text import slugify
 from .mixins import BallotGeneratorMixin
+from account.views import AccountLoginView
 
 
 # Create your views here.
+class IndexView(View):
+    template_name = 'voting/login.html'
+
+    @method_decorator(login_required(login_url='account_login'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return render(request, self.template_name, context)
+
+
 class VoterDashboardView(View):
     template_name = "voting/voter/result.html"
 

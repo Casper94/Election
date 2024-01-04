@@ -12,7 +12,7 @@ urlpatterns = [
     path('voters/update', UpdateVoterView.as_view(), name="updateVoter"),
 
     # * Position
-    path('positions/view', ViewPositionByIdView.as_view(), name='viewPosition'),
+    path('position/view', ViewPositionByIdView.as_view(), name='viewPosition'),
     path('position/update', UpdatePositionView.as_view(), name="updatePosition"),
     path('position/delete', DeletePositionView.as_view(), name='deletePosition'),
     path('positions/view', ViewPositionsView.as_view(), name='viewPositions'),

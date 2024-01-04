@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="cbebeaee-717f-42b7-8fbd-61d6d7128dcb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrator/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/administrator/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrator/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/administrator/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/election/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/election/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/root.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/root.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/voting/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/voting/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/voting/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/voting/views.py" afterDir="false" />
     </list>
@@ -96,7 +100,8 @@
       <workItem from="1704085165722" duration="1503000" />
       <workItem from="1704184501180" duration="2886000" />
       <workItem from="1704201432650" duration="1760000" />
-      <workItem from="1704256776462" duration="3035000" />
+      <workItem from="1704256776462" duration="4574000" />
+      <workItem from="1704371556646" duration="2315000" />
     </task>
     <servers />
   </component>
@@ -119,13 +124,23 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/administrator/views.py</url>
-          <line>143</line>
+          <line>141</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/administrator/views.py</url>
-          <line>14</line>
-          <option name="timeStamp" value="4" />
+          <line>298</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/administrator/views.py</url>
+          <line>347</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/voting/views.py</url>
+          <line>28</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

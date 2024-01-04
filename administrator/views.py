@@ -3,13 +3,11 @@ from django.urls import resolve
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
-# from voting.models import Position, Candidate, Voter, Votes
+from django.conf import settings
 from account.forms import CustomUserForm
 from voting.forms import *
 from django.urls import reverse
 from django.http import JsonResponse
-
-
 
 
 class AdminDashboardView(View):
@@ -273,7 +271,7 @@ class ViewCandidatesView(View):
         if form.is_valid():
             new_candidate = form.save()
             messages.success(request, "New Candidate Created")
-            return redirect('view_candidates')  # Redirect to the same view after successful form submission
+            return redirect('viewCandidates')  # Redirect to the same view after successful form submission
         else:
             messages.error(request, "Form errors")
 
