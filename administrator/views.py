@@ -201,7 +201,7 @@ class ViewPositionsView(View):
             new_position.priority = positions.count() + 1  # Just in case it is empty.
             new_position.save()
             messages.success(request, "New Position Created")
-            return redirect('view_positions')  # Redirect to the same view after successful form submission
+            return redirect('viewPositions')  # Redirect to the same view after successful form submission
         else:
             messages.error(request, "Form errors")
 
